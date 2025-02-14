@@ -44,7 +44,7 @@ write, ft_printf, malloc, free, exit
            };
 		   
 ◦ kill
-
+ 
 	kill [options] <pid> [...]
 
 	send signals to running processes.
