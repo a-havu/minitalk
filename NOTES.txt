@@ -30,8 +30,7 @@ write, ft_printf, malloc, free, exit
 	#include <signal.h>
 	int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
 
-	system call, used to change the action taken by a process on receipt of a specific signal.
-	/ allows the calling process to examine and/or specify the action to be associated with a specific signal. 
+	system call, allows the calling process to examine and/or specify the action to be associated with a specific signal. 
 	If _act_ is non-NULL, the new action for signal  _signum_  is  installed  from  _act_.   If
     _oldact_ is non-NULL, the previous action is saved in _oldact_.
 
@@ -40,7 +39,7 @@ write, ft_printf, malloc, free, exit
                void     (*sa_sigaction)(int, siginfo_t *, void *);
                sigset_t   sa_mask;
                int        sa_flags;
-               void     (*sa_restorer)(void);
+              void     (*sa_restorer)(void); - NOT intended for application use!
            };
 		   
 ◦ kill

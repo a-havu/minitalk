@@ -6,27 +6,50 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:48:43 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/14 14:17:59 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/02/19 13:51:42 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-// "SPEAKER"
-
-void	handle_signal(int server_pid, char c)
+void	send_signal(int server_pid, char c)
 {
-	int	byte;
+	int	bit;
+	int	i;
 
-	byte = 8;
-
-	while (byte--)
+	bit = 0;
+	i = 0;
+	while (i < 8)
 	{
-		if (c >> byte & 1)
+		bit = (c & (1 << i)) != 0;
+		if (bit)
+			kill(server_pid, SIGUSR1);
+		else
+			kill(server_pid, SIGUSR2);
+		usleep(500);
+		i++;
 	}
-	kill(server_pid, SIGUSR1);
-	kill(server_pid, SIGUSR2);
 }
+
+/*static void    send_char(int pid, char c)
+{
+    int    i;
+    int    bit;
+
+    i = 7;
+    while (i >= 0)
+    {
+        bit = (c & (1 << i));
+        if (bit)
+            kill(pid, SIGUSR2);
+        else
+            kill(pid, SIGUSR1);
+        while (g_message_received == 0)
+            pause();
+        g_message_received = 0;
+        i--;
+    }
+}*/
 
 int	main(int argc, char **argv)
 {
@@ -35,18 +58,18 @@ int	main(int argc, char **argv)
 	
 	if (argc != 3 || !ft_isdigit(argv[1][0]))
 	{
-		ft_printf("Error\n");
+		ft_printf("\033[91mError: wrong arguments!\033[0m\n");
+		ft_printf("\033[32mThis is the correct format:");
+		ft_printf("./client <SERVER PID> <MESSAGE>\n");
+		ft_printf("Try again 🌻\033[0m\n");
 		exit(EXIT_FAILURE);
 	}
 	i = 0;
 	server_pid = ft_atoi(argv[1]);
 	while(argv[2][i])
 	{
-		handle_signal(server_pid, argv[2][i]);
+		send_signal(server_pid, argv[2][i]);
 		i++;
 	}
+	send_signal(server_pid, '\n');
 }
-
-// takes two parameters: the server PID &  the string to send !! it can't receive a whole string,
-//instead it receives ASCII's in the form of 0's and 1's
-// sends the string to the server 
