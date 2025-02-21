@@ -6,7 +6,7 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:48:43 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/19 13:51:42 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/02/21 14:00:44 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,38 +18,18 @@ void	send_signal(int server_pid, char c)
 	int	i;
 
 	bit = 0;
-	i = 0;
-	while (i < 8)
+	i = 7;
+	while (i >= 0)
 	{
-		bit = (c & (1 << i)) != 0;
+		bit = 1 & (c >> i);
 		if (bit)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		usleep(500);
-		i++;
+		usleep(400);
+		i--;
 	}
 }
-
-/*static void    send_char(int pid, char c)
-{
-    int    i;
-    int    bit;
-
-    i = 7;
-    while (i >= 0)
-    {
-        bit = (c & (1 << i));
-        if (bit)
-            kill(pid, SIGUSR2);
-        else
-            kill(pid, SIGUSR1);
-        while (g_message_received == 0)
-            pause();
-        g_message_received = 0;
-        i--;
-    }
-}*/
 
 int	main(int argc, char **argv)
 {

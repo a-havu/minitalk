@@ -6,7 +6,7 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:22:07 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/19 13:53:50 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/02/21 14:39:10 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	put_in_array(unsigned char byte, char array[131072], int i)
 	if (byte == '\n')
 	{
 		ft_printf("%s\n", array);
-		array = NULL;
+		ft_bzero(array, ft_strlen(array));
 		i = 0;
 	}
 }
@@ -30,12 +30,14 @@ void handle_signal(int signum)
 	static char				array[131072];
 	static int				i;
 
-    if (signum == SIGUSR1)
-        byte = (byte << 1) | 1;
-    else if (signum == SIGUSR2)
-        byte = byte << 1;
+   /*if (signum == SIGUSR1)
+		ft_printf("1");
+	if (signum == SIGUSR2)
+		ft_printf("0");*/
+	if (signum == SIGUSR1)
+        byte = byte | (1 << (7 - bit)); 
     bit++;
-    if (bit == 8 && byte)
+    if (bit == 8)
     {
         put_in_array(byte, array, i);
 		i++;
