@@ -6,11 +6,19 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:48:43 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/21 14:00:44 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/02/23 13:30:51 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+void	receive_signal(int sig, siginfo_t *info, void *ucontext)
+{
+	(void)ucontext;
+	(void)info;
+	if (sig == SIGUSR2)
+		ft_printf("🤖");
+}
 
 void	send_signal(int server_pid, char c)
 {
@@ -33,8 +41,9 @@ void	send_signal(int server_pid, char c)
 
 int	main(int argc, char **argv)
 {
-	int	server_pid;
-	int	i;
+	int					server_pid;
+	int					i;
+	struct sigaction	receive;
 	
 	if (argc != 3 || !ft_isdigit(argv[1][0]))
 	{
@@ -46,10 +55,14 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	server_pid = ft_atoi(argv[1]);
+	receive.sa_sigaction = receive_signal;
+	receive.sa_flags = SA_RESTART | SA_SIGINFO;
+	sigaction(SIGUSR1, &receive, NULL);
+	sigaction(SIGUSR2, &receive, NULL);
 	while(argv[2][i])
 	{
 		send_signal(server_pid, argv[2][i]);
 		i++;
 	}
-	send_signal(server_pid, '\n');
+	send_signal(server_pid, '\0');
 }
