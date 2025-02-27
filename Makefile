@@ -6,7 +6,7 @@
 #    By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/12 11:22:50 by ahavu             #+#    #+#              #
-#    Updated: 2025/02/23 13:38:33 by ahavu            ###   ########.fr        #
+#    Updated: 2025/02/24 09:42:58 by ahavu            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ CFLAGS	:= -Wall -Wextra -Werror -g -I ./incl
 all: $(NAME) $(NAME_SRV)
 
 $(NAME): $(OBJECTS_NAME)
-	@echo "\033[34mmaking libft...\033[0m"
+	@echo "\033[36mmaking libft...\033[0m"
 	@make -C $(LIBFT_PATH)
 	$(CC) $(CFLAGS) $(OBJECTS_NAME) $(LIBFT_PATH)libft_plus.a \
 		$(HEADERS) -o $(NAME)
@@ -37,7 +37,7 @@ $(NAME): $(OBJECTS_NAME)
 $(NAME_SRV): $(OBJECTS_SRV)
 	$(CC) $(CFLAGS) $(OBJECTS_SRV) $(LIBFT_PATH)libft_plus.a \
 		$(HEADERS) -o $(NAME_SRV)
-	@echo "\033[34m---minitalk compiled!---\033[0m"
+	@echo "\033[36m---minitalk compiled!---\033[0m"
 
 clean:
 	rm -rf $(OBJECTS_NAME) $(OBJECTS_SRV)
@@ -46,7 +46,7 @@ clean:
 fclean: clean
 	rm -rf $(NAME) $(NAME_SRV)
 	@make fclean -C $(LIBFT_PATH)
-	@echo "\033[34m---everything cleaned!---\033[0m"
+	@echo "\033[36m---everything cleaned!---\033[0m"
 
 re: fclean all
 

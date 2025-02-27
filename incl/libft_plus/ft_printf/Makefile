@@ -21,7 +21,7 @@ HEADER = $(NAME:.a=.h)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I ./../incl
 
 all: $(NAME)
 

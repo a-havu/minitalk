@@ -6,7 +6,7 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:16:19 by ahavu             #+#    #+#             */
-/*   Updated: 2025/01/09 16:42:03 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/01/28 10:13:15 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static long long	loop(long long res, int neg, const char *nptr, int i)
 
 long long	ft_atoi_longlong(const char *nptr)
 {
-	int		    i;
+	int			i;
 	long long	res;
-	int		    neg;
+	int			neg;
 
 	i = 0;
 	res = 0;
