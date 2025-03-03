@@ -6,13 +6,25 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:48:43 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/26 09:54:42 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/03/03 09:10:13 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static volatile int	g_message_received = 0;
+static int	g_message_received = 0;
+
+static void	ft_error(int num)
+{
+	if (num == 1)
+		ft_printf("\033[91mError: wrong arguments!\033[0m\n");
+	if (num == 2)
+		ft_printf("\033[91mError: wrong PID!\033[0m\n");
+	ft_printf("\033[32mThis is the correct format:");
+	ft_printf(" ./client <SERVER PID> <MESSAGE>\n");
+	ft_printf("Try again 🌻\033[0m\n");
+	exit(EXIT_FAILURE);
+}
 
 static void	receive_signal(int sig, siginfo_t *info, void *ucontext)
 {
@@ -43,9 +55,15 @@ static void	send_signal(int server_pid, char c)
 	{
 		bit = 1 & (c >> i);
 		if (bit)
-			kill(server_pid, SIGUSR1);
+		{
+			if (kill(server_pid, SIGUSR1) == -1)
+				ft_error(2);
+		}
 		else
-			kill(server_pid, SIGUSR2);
+		{
+			if (kill(server_pid, SIGUSR2) == -1)
+				ft_error(2);
+		}
 		while (g_message_received == 0)
 			usleep(100);
 		g_message_received = 0;
@@ -57,9 +75,11 @@ static int	check_args(char **argv)
 {
 	int	i;
 	int	ret;
+	int	server_pid;
 
 	i = 0;
 	ret = 1;
+	server_pid = ft_atoi(argv[1]);
 	while (argv[1][i])
 	{
 		if (!ft_isdigit(argv[1][i]))
@@ -69,6 +89,8 @@ static int	check_args(char **argv)
 		}
 		i++;
 	}
+	if (server_pid == 0)
+		ft_error(2);
 	return (ret);
 }
 
@@ -78,16 +100,10 @@ int	main(int argc, char **argv)
 	int					i;
 	struct sigaction	receive;
 
-	server_pid = ft_atoi(argv[1]);
-	if (argc != 3 || !check_args(argv) || server_pid == 0)
-	{
-		ft_printf("\033[91mError: wrong arguments!\033[0m\n");
-		ft_printf("\033[32mThis is the correct format:");
-		ft_printf(" ./client <SERVER PID> <MESSAGE>\n");
-		ft_printf("Try again 🌻\033[0m\n");
-		exit(EXIT_FAILURE);
-	}
+	if (argc != 3 || !check_args(argv))
+		ft_error(1);
 	i = 0;
+	server_pid = ft_atoi(argv[1]);
 	receive.sa_sigaction = receive_signal;
 	receive.sa_flags = SA_SIGINFO;
 	sigemptyset(&receive.sa_mask);

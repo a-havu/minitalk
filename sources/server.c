@@ -6,7 +6,7 @@
 /*   By: ahavu <ahavu@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:22:07 by ahavu             #+#    #+#             */
-/*   Updated: 2025/02/26 10:45:12 by ahavu            ###   ########.fr       */
+/*   Updated: 2025/03/03 09:33:06 by ahavu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,13 @@ int	main(void)
 	struct sigaction	action;
 
 	ft_printf("\033[92mServer process ID: %d\n", getpid());
-	ft_printf("Waiting for message...\n");
 	action.sa_sigaction = handle_signal;
 	action.sa_flags = SA_SIGINFO;
 	sigemptyset(&action.sa_mask);
-	sigaction(SIGUSR1, &action, NULL);
-	sigaction(SIGUSR2, &action, NULL);
+	if (sigaction(SIGUSR1, &action, NULL) == -1)
+		ft_printf("Error setting SIGUSR1 handler :()");
+	if (sigaction(SIGUSR2, &action, NULL) == -1)
+		ft_printf("Error setting SIGUSR2 handler :()");
 	while (1)
 		pause();
 	return (0);
